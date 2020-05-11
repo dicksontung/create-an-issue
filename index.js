@@ -39,11 +39,14 @@ Toolkit.run(async tools => {
 
   // Create the new issue
   try {
+    const templated_labels = listToArray(attributes.labels).map(function (i) {
+        return env.renderString(i, templateVariables)
+    })
     const issue = await tools.github.issues.create({
       ...tools.context.repo,
       ...templated,
       assignees: assignees ? listToArray(assignees) : listToArray(attributes.assignees),
-      labels: listToArray(attributes.labels),
+      labels: templated_labels,
       milestone: tools.inputs.milestone || attributes.milestone
     })
 
